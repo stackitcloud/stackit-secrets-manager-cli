@@ -32,7 +32,7 @@ release:
 	git tag -a v$(VERSION) -m "Release v$(VERSION)"
 	git push origin v$(VERSION)
 	$(GORELEASER) check
-	$(GORELEASER) release
+	$(GORELEASER) release --clean
 
 .PHONY: release-local
 release-local:
