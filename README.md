@@ -10,7 +10,7 @@ The recommended way for installing the STACKIT Secrets-Manager CLI is to
 Alternatively you can build it from source, if you have Go already installed:
 
 ```shell
-$ go install github.com/stackitcloud/stackit-secrets-manager-cli/cmd/stackit-secrets-manager-cli@latest
+$ go install github.com/stackitcloud/stackit-secrets-manager-cli/cmd/stackit-secrets-manager@latest
 ```
 
 ## Usage
