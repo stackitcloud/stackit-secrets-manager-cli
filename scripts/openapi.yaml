@@ -1,0 +1,535 @@
+{
+  "components": {
+    "schemas": {
+      "instance": {
+        "properties": {
+          "apiUrl": {
+            "description": "The API endpoint for connecting to the secrets engine.",
+            "type": "string"
+          },
+          "creationFinishedDate": {
+            "description": "The date and time the creation of the Secrets Manager instance was finished.",
+            "type": "string"
+          },
+          "creationStartDate": {
+            "description": "The date and time the creation of the Secrets Manager instance was triggered.",
+            "type": "string"
+          },
+          "id": {
+            "description": "A auto generated unique id which identifies the secrets manager instances.",
+            "type": "string"
+          },
+          "name": {
+            "description": "A user chosen name to distinguish multiple secrets manager instances.",
+            "type": "string"
+          },
+          "secretLimit": {
+            "description": "The maximum number of allowed secrets.",
+            "type": "integer"
+          },
+          "secretsEngine": {
+            "description": "The name of the secrets engine.",
+            "type": "string"
+          },
+          "state": {
+            "description": "The current state of the Secrets Manager instance.",
+            "type": "string"
+          },
+          "updateFinishedDate": {
+            "type": "string"
+          },
+          "updateStartDate": {
+            "type": "string"
+          },
+          "userLimit": {
+            "description": "The maximum number of allowed users.",
+            "type": "integer"
+          },
+          "versionLimit": {
+            "description": "The maximum number of allowed secret versions.",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "userLimit",
+          "secretLimit",
+          "versionLimit",
+          "secretsEngine",
+          "apiUrl",
+          "state",
+          "creationStartDate"
+        ]
+      },
+      "instanceCreate": {
+        "properties": {
+          "name": {
+            "description": "A user chosen name to distinguish multiple secrets manager instances.",
+            "type": "string"
+          },
+          "secretLimit": {
+            "description": "The maximum number of allowed secrets in the range of 100-1000 in steps of 100.",
+            "type": "integer"
+          },
+          "userLimit": {
+            "description": "The maximum number of allowed users in the range of 5-100 in steps of 5.",
+            "type": "integer"
+          },
+          "versionLimit": {
+            "description": "The maximum number of allowed secret versions. Must be 0 or 5.",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "name",
+          "userLimit",
+          "secretLimit",
+          "versionLimit"
+        ]
+      },
+      "instanceList": {
+        "properties": {
+          "instances": {
+            "items": {
+              "$ref": "#/components/schemas/instance"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "instances"
+        ]
+      },
+      "instanceUpdate": {
+        "properties": {
+          "secretLimit": {
+            "description": "The maximum number of allowed secrets in the range of 100-1000 in steps of 100.",
+            "type": "integer"
+          },
+          "userLimit": {
+            "description": "The maximum number of allowed users in the range of 5-100 in steps of 5.",
+            "type": "integer"
+          },
+          "versionLimit": {
+            "description": "The maximum number of allowed secret versions. Must be 0 or 5.",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "userLimit",
+          "secretLimit",
+          "versionLimit"
+        ]
+      },
+      "user": {
+        "properties": {
+          "description": {
+            "description": "A user chosen description to differentiate between multiple users.",
+            "type": "string"
+          },
+          "id": {
+            "description": "A auto generated unique id which identifies the users.",
+            "type": "string"
+          },
+          "password": {
+            "description": "A auto generated password for logging in with the user.",
+            "type": "string"
+          },
+          "username": {
+            "description": "A auto generated username for logging in with the user.",
+            "type": "string"
+          },
+          "write": {
+            "description": "Is true if the user has write access to the secrets engine. Is false for a read-only user.",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "username",
+          "password",
+          "write",
+          "description"
+        ]
+      },
+      "userCreate": {
+        "properties": {
+          "description": {
+            "description": "A user chosen description to differentiate between multiple users.",
+            "type": "string"
+          },
+          "write": {
+            "description": "Is true if the user has write access to the secrets engine. Is false for a read-only user.",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "write",
+          "description"
+        ]
+      },
+      "userList": {
+        "properties": {
+          "users": {
+            "items": {
+              "$ref": "#/components/schemas/user"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "users"
+        ]
+      },
+      "userUpdate": {
+        "properties": {
+          "write": {
+            "description": "Is true if the user has write access to the secrets engine. Is false for a read-only user.",
+            "type": "boolean"
+          }
+        }
+      }
+    }
+  },
+  "info": {
+    "description": "This API is a BETA API.\n\nThere are no guarantees for stability or compatibility of the API itself. Breaking changes to the APi can happen\nany time.\n\nThere are no guarantees for the availability of the resources which are deployed by the API.\n\nDo not use this API for production workload where you cannot tolerate loss of data or unavailability of services.\n\nThis API provides endpoints for managing the Secrets-Manager.\n",
+    "title": "Secrets-Manager API",
+    "version": "0.0.1"
+  },
+  "openapi": "3.0.3",
+  "paths": {
+    "/v1/projects/{projectId}/instances": {
+      "get": {
+        "description": "Returns a list of all Secrets Manager instances within the project.",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/instanceList"
+                }
+              }
+            },
+            "description": "Successful response with all instances."
+          },
+          "401": {
+            "description": "Unauthorized. You may have provided no or wrong credentials."
+          },
+          "500": {
+            "description": "Internal server error. The application experienced some unexpected situation."
+          }
+        }
+      },
+      "parameters": [
+        {
+          "description": "The STACKIT portal project UUID the Secrets Manager instance is part of.",
+          "in": "path",
+          "name": "projectId",
+          "required": true,
+          "schema": {
+            "format": "uuid",
+            "type": "string",
+            "x-go-type": "string"
+          }
+        }
+      ],
+      "post": {
+        "description": "Creates a new Secrets Manager instance within the project.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/instanceCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/instance"
+                }
+              }
+            },
+            "description": "Instance was created successfully"
+          },
+          "401": {
+            "description": "Unauthorized. You may have provided no or wrong credentials."
+          },
+          "500": {
+            "description": "Internal server error. The application experienced some unexpected situation."
+          }
+        }
+      }
+    },
+    "/v1/projects/{projectId}/instances/{instanceId}": {
+      "delete": {
+        "description": "Deletes the given Secrets Manager instance.",
+        "responses": {
+          "204": {
+            "description": "Instance was deleted successfully."
+          },
+          "401": {
+            "description": "Unauthorized. You may have provided no or wrong credentials."
+          },
+          "500": {
+            "description": "Internal server error. The application experienced some unexpected situation."
+          }
+        }
+      },
+      "get": {
+        "description": "Returns the details for the given Secrets Manager instance.",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/instance"
+                }
+              }
+            },
+            "description": "Instance details successfully retrieved."
+          },
+          "401": {
+            "description": "Unauthorized. You may have provided no or wrong credentials."
+          },
+          "500": {
+            "description": "Internal server error. The application experienced some unexpected situation."
+          }
+        }
+      },
+      "parameters": [
+        {
+          "description": "The STACKIT portal project UUID the Secrets Manager instance is part of.",
+          "in": "path",
+          "name": "projectId",
+          "required": true,
+          "schema": {
+            "format": "uuid",
+            "type": "string",
+            "x-go-type": "string"
+          }
+        },
+        {
+          "description": "The Secrets Manager instance UUID.",
+          "in": "path",
+          "name": "instanceId",
+          "required": true,
+          "schema": {
+            "format": "uuid",
+            "type": "string",
+            "x-go-type": "string"
+          }
+        }
+      ],
+      "put": {
+        "description": "Updates the details for the given Secrets Manager instance.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/instanceUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The details for the instance have been successfully updated."
+          },
+          "401": {
+            "description": "Unauthorized. You may have provided no or wrong credentials."
+          },
+          "500": {
+            "description": "Internal server error. The application experienced some unexpected situation."
+          }
+        }
+      }
+    },
+    "/v1/projects/{projectId}/instances/{instanceId}/users": {
+      "get": {
+        "description": "Returns the users for the given Secrets Manager instance.",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/userList"
+                }
+              }
+            },
+            "description": "All users for the Secrets Manager instance have been returned."
+          },
+          "401": {
+            "description": "Unauthorized. You may have provided no or wrong credentials."
+          },
+          "500": {
+            "description": "Internal server error. The application experienced some unexpected situation."
+          }
+        }
+      },
+      "parameters": [
+        {
+          "description": "The STACKIT portal project UUID the Secrets Manager instance is part of.",
+          "in": "path",
+          "name": "projectId",
+          "required": true,
+          "schema": {
+            "format": "uuid",
+            "type": "string",
+            "x-go-type": "string"
+          }
+        },
+        {
+          "description": "The Secrets Manager instance UUID.",
+          "in": "path",
+          "name": "instanceId",
+          "required": true,
+          "schema": {
+            "format": "uuid",
+            "type": "string",
+            "x-go-type": "string"
+          }
+        }
+      ],
+      "post": {
+        "description": "Creates a new user for the given Secrets Manager instance.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/userCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/user"
+                }
+              }
+            },
+            "description": "The user has been created for the Secrets Manager instance."
+          },
+          "401": {
+            "description": "Unauthorized. You may have provided no or wrong credentials."
+          },
+          "500": {
+            "description": "Internal server error. The application experienced some unexpected situation."
+          }
+        }
+      }
+    },
+    "/v1/projects/{projectId}/instances/{instanceId}/users/{userId}": {
+      "delete": {
+        "description": "Deletes the given user.",
+        "responses": {
+          "204": {
+            "description": "Instance was deleted successfully"
+          },
+          "401": {
+            "description": "Unauthorized. You may have provided no or wrong credentials."
+          },
+          "500": {
+            "description": "Internal server error. The application experienced some unexpected situation."
+          }
+        }
+      },
+      "get": {
+        "description": "Returns the details for the given user.",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/user"
+                }
+              }
+            },
+            "description": "The details for the user have been successfully returned."
+          },
+          "401": {
+            "description": "Unauthorized. You may have provided no or wrong credentials."
+          },
+          "500": {
+            "description": "Internal server error. The application experienced some unexpected situation."
+          }
+        }
+      },
+      "parameters": [
+        {
+          "description": "The STACKIT portal project UUID the Secrets Manager instance is part of.",
+          "in": "path",
+          "name": "projectId",
+          "required": true,
+          "schema": {
+            "format": "uuid",
+            "type": "string",
+            "x-go-type": "string"
+          }
+        },
+        {
+          "description": "The Secrets Manager instance UUID.",
+          "in": "path",
+          "name": "instanceId",
+          "required": true,
+          "schema": {
+            "format": "uuid",
+            "type": "string",
+            "x-go-type": "string"
+          }
+        },
+        {
+          "description": "The user UUID with permissions on the Secrets Manager instance.",
+          "in": "path",
+          "name": "userId",
+          "required": true,
+          "schema": {
+            "format": "uuid",
+            "type": "string",
+            "x-go-type": "string"
+          }
+        }
+      ],
+      "put": {
+        "description": "Updates the details for the given user.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/userUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The details for the user have been successfully updated."
+          },
+          "401": {
+            "description": "Unauthorized. You may have provided no or wrong credentials."
+          },
+          "500": {
+            "description": "Internal server error. The application experienced some unexpected situation."
+          }
+        }
+      }
+    }
+  },
+  "servers": [
+    {
+      "description": "This API is a BETA API.\n\nThere are no guarantees for stability or compatibility ",
+      "url": "https://secrets-manager.api.eu01.stackit.cloud"
+    }
+  ]
+}

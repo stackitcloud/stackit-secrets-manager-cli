@@ -1,0 +1,15 @@
+# This is the configuration file for golangci-lint (https://golangci-lint.run)
+# A demo file containing all possible options can be found at https://github.com/golangci/golangci-lint/blob/master/.golangci.reference.yml
+output:
+  format: colored-line-number,junit-xml:tmp/linting-junit.xml
+linters:
+  disable-all: true
+  enable:
+    - errcheck
+    - gosimple
+    - govet
+    - ineffassign
+    - staticcheck
+    - typecheck
+    - unused
+    - gosec
