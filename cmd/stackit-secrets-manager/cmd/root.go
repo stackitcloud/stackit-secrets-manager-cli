@@ -42,6 +42,17 @@ func init() {
 func initConfig() {
 	viper.SetEnvKeyReplacer(strings.NewReplacer("-", "_"))
 	viper.AutomaticEnv()
+	viper.SetConfigName(".stackit-secrets-manager")
+	viper.SetConfigType("yaml")
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		panic(err)
+	}
+	viper.AddConfigPath(homeDir)
+
+	// silently ignore missing config file, the user might provide all values on the command line or via
+	// environment variables
+	_ = viper.ReadInConfig()
 
 	// There is some issue, where the integration of Cobra with Viper will result in wrong values, therefore we are
 	// setting the values from viper manually. The issue is, that with the standard integration, viper will see, that

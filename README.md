@@ -16,7 +16,17 @@ $ go install github.com/stackitcloud/stackit-secrets-manager-cli/cmd/stackit-sec
 ## Usage
 
 Create an access token for the STACKIT project you want to interact with and set the token and the project id
-as environment variables:
+with the `configure` subcommand:
+
+```shell
+$ stackit-secrets-manager configure
+Authentication Token []: <your token>
+Project UUID []:  <your project id>
+Configuration successfully written
+```
+
+Alternatively, you can set these settings as environment variables in cases where you might have a read-only file
+system:
 
 ```shell
 $ export AUTHENTICATION_TOKEN=eyJraWQiO...zQXuLFGP3hMfw
