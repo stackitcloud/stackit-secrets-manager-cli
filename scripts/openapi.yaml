@@ -44,10 +44,6 @@
           "userLimit": {
             "description": "The maximum number of allowed users.",
             "type": "integer"
-          },
-          "versionLimit": {
-            "description": "The maximum number of allowed secret versions.",
-            "type": "integer"
           }
         },
         "required": [
@@ -55,7 +51,6 @@
           "name",
           "userLimit",
           "secretLimit",
-          "versionLimit",
           "secretsEngine",
           "apiUrl",
           "state",
@@ -75,17 +70,12 @@
           "userLimit": {
             "description": "The maximum number of allowed users in the range of 5-100 in steps of 5.",
             "type": "integer"
-          },
-          "versionLimit": {
-            "description": "The maximum number of allowed secret versions. Must be 0 or 5.",
-            "type": "integer"
           }
         },
         "required": [
           "name",
           "userLimit",
-          "secretLimit",
-          "versionLimit"
+          "secretLimit"
         ]
       },
       "instanceList": {
@@ -110,16 +100,11 @@
           "userLimit": {
             "description": "The maximum number of allowed users in the range of 5-100 in steps of 5.",
             "type": "integer"
-          },
-          "versionLimit": {
-            "description": "The maximum number of allowed secret versions. Must be 0 or 5.",
-            "type": "integer"
           }
         },
         "required": [
           "userLimit",
-          "secretLimit",
-          "versionLimit"
+          "secretLimit"
         ]
       },
       "user": {
@@ -195,7 +180,7 @@
   "info": {
     "description": "This API is a BETA API.\n\nThere are no guarantees for stability or compatibility of the API itself. Breaking changes to the APi can happen\nany time.\n\nThere are no guarantees for the availability of the resources which are deployed by the API.\n\nDo not use this API for production workload where you cannot tolerate loss of data or unavailability of services.\n\nThis API provides endpoints for managing the Secrets-Manager.\n",
     "title": "Secrets-Manager API",
-    "version": "0.0.1"
+    "version": "0.9.0"
   },
   "openapi": "3.0.3",
   "paths": {

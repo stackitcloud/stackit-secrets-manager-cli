@@ -9,10 +9,9 @@ import (
 )
 
 var (
-	updateInstanceinstanceId   string
-	updateInstanceUserLimit    int
-	updateInstanceSecretLimit  int
-	updateInstanceVersionLimit int
+	updateInstanceinstanceId  string
+	updateInstanceUserLimit   int
+	updateInstanceSecretLimit int
 )
 
 var updateInstanceCmd = &cobra.Command{
@@ -33,7 +32,6 @@ func init() {
 	_ = updateInstanceCmd.MarkPersistentFlagRequired("instance-id")
 	updateInstanceCmd.PersistentFlags().IntVar(&updateInstanceUserLimit, "user-limit", 5, "The number of maximum users, 5-100 in steps of 5.")
 	updateInstanceCmd.PersistentFlags().IntVar(&updateInstanceSecretLimit, "secret-limit", 100, "The number of maximum secrets, 100-1.000 in steps of 100.")
-	updateInstanceCmd.PersistentFlags().IntVar(&updateInstanceVersionLimit, "version-limit", 0, "The number of maximum versions, 0 or 5.")
 }
 
 func updateInstance() error {
@@ -42,9 +40,8 @@ func updateInstance() error {
 		return err
 	}
 	request := api.PutV1ProjectsProjectIdInstancesInstanceIdJSONRequestBody{
-		UserLimit:    updateInstanceUserLimit,
-		SecretLimit:  updateInstanceSecretLimit,
-		VersionLimit: updateInstanceVersionLimit,
+		UserLimit:   updateInstanceUserLimit,
+		SecretLimit: updateInstanceSecretLimit,
 	}
 	response, err := client.PutV1ProjectsProjectIdInstancesInstanceId(context.Background(), projectId, updateInstanceinstanceId, request)
 	if err != nil {

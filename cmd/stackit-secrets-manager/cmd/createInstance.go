@@ -10,10 +10,9 @@ import (
 )
 
 var (
-	createInstanceName         string
-	createInstanceUserLimit    int
-	createInstanceSecretLimit  int
-	createInstanceVersionLimit int
+	createInstanceName        string
+	createInstanceUserLimit   int
+	createInstanceSecretLimit int
 )
 
 var createInstanceCmd = &cobra.Command{
@@ -32,7 +31,6 @@ func init() {
 
 	createInstanceCmd.PersistentFlags().IntVar(&createInstanceUserLimit, "user-limit", 5, "The number of maximum users, 5-100 in steps of 5.")
 	createInstanceCmd.PersistentFlags().IntVar(&createInstanceSecretLimit, "secret-limit", 100, "The number of maximum secrets, 100-1.000 in steps of 100.")
-	createInstanceCmd.PersistentFlags().IntVar(&createInstanceVersionLimit, "version-limit", 0, "The number of maximum versions, 0 or 5.")
 	createInstanceCmd.PersistentFlags().StringVar(&createInstanceName, "name", "", "The name to set for the instance.")
 	_ = createInstanceCmd.MarkPersistentFlagRequired("name")
 }
@@ -43,10 +41,9 @@ func createInstance() error {
 		return err
 	}
 	request := api.PostV1ProjectsProjectIdInstancesJSONRequestBody{
-		Name:         createInstanceName,
-		UserLimit:    createInstanceUserLimit,
-		SecretLimit:  createInstanceSecretLimit,
-		VersionLimit: createInstanceVersionLimit,
+		Name:        createInstanceName,
+		UserLimit:   createInstanceUserLimit,
+		SecretLimit: createInstanceSecretLimit,
 	}
 	response, err := client.PostV1ProjectsProjectIdInstances(context.Background(), projectId, request)
 	if err != nil {

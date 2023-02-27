@@ -35,6 +35,8 @@ var configureCmd = &cobra.Command{
 		input = strings.TrimSpace(input)
 		if input != "" {
 			viper.Set("authentication-token", input)
+		} else {
+			viper.Set("authentication-token", authenticationToken)
 		}
 
 		fmt.Printf("Project UUID [%s]: ", projectId)
@@ -46,6 +48,8 @@ var configureCmd = &cobra.Command{
 		input = strings.TrimSpace(input)
 		if input != "" {
 			viper.Set("project-id", input)
+		} else {
+			viper.Set("project-id", projectId)
 		}
 
 		// Viper has a known issue with WriteConfig running into an error in case the config file does not exist. Therefore,
