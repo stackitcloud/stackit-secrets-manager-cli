@@ -53,12 +53,12 @@ func getInstances() error {
 func printInstances(instances []api.Instance) error {
 	writer := tabwriter.NewWriter(os.Stdout, 0, 0, 1, ' ', 0)
 	defer writer.Flush()
-	_, err := fmt.Fprintf(writer, "Id\tName\tUsers\tSecrets\tAPI URL\tSecrets Engine\tState\n")
+	_, err := fmt.Fprintf(writer, "Id\tName\tSecrets\tAPI URL\tSecrets Engine\tState\n")
 	if err != nil {
 		return fmt.Errorf("failed to write to tabwriter: %w", err)
 	}
 	for _, instance := range instances {
-		_, err = fmt.Fprintf(writer, "%s\t%s\t%d\t%d\t%s\t%s\t%s\n", instance.Id, instance.Name, instance.UserLimit, instance.SecretLimit, instance.ApiUrl, instance.SecretsEngine, instance.State)
+		_, err = fmt.Fprintf(writer, "%s\t%s\t%d\t%s\t%s\t%s\n", instance.Id, instance.Name, instance.SecretCount, instance.ApiUrl, instance.SecretsEngine, instance.State)
 		if err != nil {
 			return fmt.Errorf("failed to write to tabwriter: %w", err)
 		}

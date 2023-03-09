@@ -23,8 +23,8 @@
             "description": "A user chosen name to distinguish multiple secrets manager instances.",
             "type": "string"
           },
-          "secretLimit": {
-            "description": "The maximum number of allowed secrets.",
+          "secretCount": {
+            "description": "The number of secrets currently stored inside of the instance. This value will be updated once per hour.",
             "type": "integer"
           },
           "secretsEngine": {
@@ -40,21 +40,16 @@
           },
           "updateStartDate": {
             "type": "string"
-          },
-          "userLimit": {
-            "description": "The maximum number of allowed users.",
-            "type": "integer"
           }
         },
         "required": [
           "id",
           "name",
-          "userLimit",
-          "secretLimit",
           "secretsEngine",
           "apiUrl",
           "state",
-          "creationStartDate"
+          "creationStartDate",
+          "secretCount"
         ]
       },
       "instanceCreate": {
@@ -62,20 +57,10 @@
           "name": {
             "description": "A user chosen name to distinguish multiple secrets manager instances.",
             "type": "string"
-          },
-          "secretLimit": {
-            "description": "The maximum number of allowed secrets in the range of 100-1000 in steps of 100.",
-            "type": "integer"
-          },
-          "userLimit": {
-            "description": "The maximum number of allowed users in the range of 5-100 in steps of 5.",
-            "type": "integer"
           }
         },
         "required": [
-          "name",
-          "userLimit",
-          "secretLimit"
+          "name"
         ]
       },
       "instanceList": {
@@ -89,22 +74,6 @@
         },
         "required": [
           "instances"
-        ]
-      },
-      "instanceUpdate": {
-        "properties": {
-          "secretLimit": {
-            "description": "The maximum number of allowed secrets in the range of 100-1000 in steps of 100.",
-            "type": "integer"
-          },
-          "userLimit": {
-            "description": "The maximum number of allowed users in the range of 5-100 in steps of 5.",
-            "type": "integer"
-          }
-        },
-        "required": [
-          "userLimit",
-          "secretLimit"
         ]
       },
       "user": {
@@ -180,7 +149,7 @@
   "info": {
     "description": "This API is a BETA API.\n\nThere are no guarantees for stability or compatibility of the API itself. Breaking changes to the APi can happen\nany time.\n\nThere are no guarantees for the availability of the resources which are deployed by the API.\n\nDo not use this API for production workload where you cannot tolerate loss of data or unavailability of services.\n\nThis API provides endpoints for managing the Secrets-Manager.\n",
     "title": "Secrets-Manager API",
-    "version": "0.9.0"
+    "version": "0.10.0"
   },
   "openapi": "3.0.3",
   "paths": {
@@ -310,31 +279,7 @@
             "x-go-type": "string"
           }
         }
-      ],
-      "put": {
-        "description": "Updates the details for the given Secrets Manager instance.",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/instanceUpdate"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "The details for the instance have been successfully updated."
-          },
-          "401": {
-            "description": "Unauthorized. You may have provided no or wrong credentials."
-          },
-          "500": {
-            "description": "Internal server error. The application experienced some unexpected situation."
-          }
-        }
-      }
+      ]
     },
     "/v1/projects/{projectId}/instances/{instanceId}/users": {
       "get": {
