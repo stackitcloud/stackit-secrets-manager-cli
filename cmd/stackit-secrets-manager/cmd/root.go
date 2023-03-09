@@ -44,6 +44,7 @@ func initConfig() {
 	viper.AutomaticEnv()
 	viper.SetConfigName(".stackit-secrets-manager")
 	viper.SetConfigType("yaml")
+	viper.SetConfigPermissions(0600)
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
 		panic(err)
