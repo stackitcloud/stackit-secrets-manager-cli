@@ -62,14 +62,13 @@ $ stackit-secrets-manager get users --instance-id 0069066b-b7d2-4e04-bda8-0f3f02
 For more information about the available sub-commands and flags use the `--help` command line flag.
 
 Use the API URL and Secrets Engine name of the instance and the username and password of the user to configure
-the Hashicorp Vault client to interact with the secrets engine on the command line.
+[the Hashicorp Vault client](https://developer.hashicorp.com/vault/downloads) to interact with the secrets engine on the command line.
 
 ```shell
 $ export VAULT_ADDR=https://prod.sm.eu01.stackit.cloud
 $ vault login -method=userpass username=h86c6it5228nn9d9 password="A{o'61eJzD]|hUH4"
-$ export VAULT_TOKEN=hvs.CAESIA8boOlxSx6...1pSVFMM2lLR1JqcjNjMjA
-$ vault kv put -mount=0069066b-b7d2-4e04-bda8-0f3f02efb920 foo bar=baz
-$ vault kv get -mount=0069066b-b7d2-4e04-bda8-0f3f02efb920 foo
+$ vault kv put 0069066b-b7d2-4e04-bda8-0f3f02efb920/foo bar=baz
+$ vault kv get 0069066b-b7d2-4e04-bda8-0f3f02efb920/foo
 ```
 
 The web UI for the secrets engine can be opened in any web browser with the API url of the instance as target
