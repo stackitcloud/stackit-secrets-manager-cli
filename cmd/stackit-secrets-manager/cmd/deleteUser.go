@@ -13,7 +13,7 @@ var (
 )
 
 var deleteUserCmd = &cobra.Command{
-	Use:   "users",
+	Use:   "users <userId>",
 	Short: "Deletes a user from the Secrets Manager.",
 	Long:  `Deletes a user from the Secrets Manager.`,
 	Args:  cobra.MinimumNArgs(1),

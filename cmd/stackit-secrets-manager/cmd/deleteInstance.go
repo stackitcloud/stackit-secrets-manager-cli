@@ -8,7 +8,7 @@ import (
 )
 
 var deleteInstanceCmd = &cobra.Command{
-	Use:   "instance",
+	Use:   "instance <instanceId>",
 	Short: "Deletes an instance from the Secrets Manager.",
 	Long:  `Deletes an instance from the Secrets Manager.`,
 	Args:  cobra.MinimumNArgs(1),
