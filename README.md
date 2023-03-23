@@ -75,6 +75,19 @@ The web UI for the secrets engine can be opened in any web browser with the API 
 location (i.e. "https://prod.sm.eu01.stackit.cloud"). Choose the "Username" login method and enter the username
 and password as given by the CLI command to log in.
 
+To delete a user for that instance:
+
+```shell
+$ stackit-secrets-manager delete user <userId> --instance-id 0069066b-b7d2-4e04-bda8-0f3f02efb920
+```
+
+To delete a instance run:
+
+```shell
+$ stackit-secrets-manager delete instance 0069066b-b7d2-4e04-bda8-0f3f02efb920
+```
+
+
 ## Development
 
 If you want to work with the source code of the Secrets-Manager CLI, you need to match these prerequisites:
