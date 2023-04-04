@@ -21,7 +21,6 @@ Now set the token and the project id with the `configure` subcommand:
 ```shell
 $ stackit-secrets-manager configure
 Authentication Token []: <your token>
-Project UUID []:  <your project id>
 Configuration successfully written
 ```
 
