@@ -3,8 +3,10 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"github.com/stackitcloud/stackit-secrets-manager-cli/internal/api"
 	"net/http"
+
+	"github.com/golang-jwt/jwt/v5"
+	"github.com/stackitcloud/stackit-secrets-manager-cli/internal/api"
 )
 
 func createClient() (*api.Client, error) {
@@ -19,4 +21,17 @@ func createClient() (*api.Client, error) {
 		},
 	}
 	return apiClient, nil
+}
+
+func parseClaimFromJWT(tokenString string, claim string) (string, error) {
+	parser := jwt.NewParser()
+	token, _, err := parser.ParseUnverified(tokenString, &jwt.MapClaims{})
+	if err != nil {
+		return "", err
+	}
+	claims := *token.Claims.(*jwt.MapClaims)
+	if id, ok := claims[claim]; ok {
+		return id.(string), nil
+	}
+	return "", fmt.Errorf("fClaim \"%s\" not found in the token!", claim)
 }

@@ -1,12 +1,12 @@
 package cmd
 
 import (
-	"bufio"
 	"fmt"
-	"github.com/spf13/viper"
-	"golang.org/x/term"
 	"os"
 	"strings"
+
+	"github.com/spf13/viper"
+	"golang.org/x/term"
 
 	"github.com/spf13/cobra"
 )
@@ -24,33 +24,26 @@ var configureCmd = &cobra.Command{
 		_ = rootCmd.PersistentFlags().SetAnnotation("project-id", cobra.BashCompOneRequiredFlag, []string{"false"})
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		reader := bufio.NewReaderSize(os.Stdin, 32*1024)
-
 		fmt.Printf("Authentication Token [%s]: ", authenticationToken)
 		input, err := readLongString()
 		if err != nil {
 			fmt.Printf("ERROR: Failed to read user input: %v\n", err)
 			return
 		}
+
+		authToken := authenticationToken
 		input = strings.TrimSpace(input)
 		if input != "" {
-			viper.Set("authentication-token", input)
-		} else {
-			viper.Set("authentication-token", authenticationToken)
+			authToken = input
 		}
+		viper.Set("authentication-token", authToken)
 
-		fmt.Printf("Project UUID [%s]: ", projectId)
-		input, err = reader.ReadString('\n')
+		projectId, err := parseClaimFromJWT(authToken, "stackit/project/project.id")
 		if err != nil {
-			fmt.Printf("ERROR: Failed to read user input: %v\n", err)
+			fmt.Printf("ERROR: Failed to parse the Authentication Token: %v\n", err)
 			return
 		}
-		input = strings.TrimSpace(input)
-		if input != "" {
-			viper.Set("project-id", input)
-		} else {
-			viper.Set("project-id", projectId)
-		}
+		viper.Set("project-id", projectId)
 
 		// Viper has a known issue with WriteConfig running into an error in case the config file does not exist. Therefore,
 		// we first try SafeWriteConfig which only works in cases where the config file does not exist. If that
