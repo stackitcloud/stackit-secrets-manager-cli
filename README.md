@@ -16,12 +16,11 @@ $ go install github.com/stackitcloud/stackit-secrets-manager-cli/cmd/stackit-sec
 ## Usage
 
 Create an access token for the STACKIT project you want to interact with. The token needs at least project.member permissions.  
-Now set the token and the project id with the `configure` subcommand:
+Now set the token with the `configure` subcommand:
 
 ```shell
 $ stackit-secrets-manager configure
 Authentication Token []: <your token>
-Project UUID []:  <your project id>
 Configuration successfully written
 ```
 
