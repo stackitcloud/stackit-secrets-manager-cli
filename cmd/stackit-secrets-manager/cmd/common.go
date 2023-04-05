@@ -33,5 +33,5 @@ func parseClaimFromJWT(tokenString string, claim string) (string, error) {
 	if id, ok := claims[claim]; ok {
 		return id.(string), nil
 	}
-	return "", fmt.Errorf("fClaim \"%s\" not found in the token!", claim)
+	return "", fmt.Errorf("claim %q not found in the token", claim)
 }
