@@ -29,7 +29,7 @@ var deleteUserCmd = &cobra.Command{
 func init() {
 	deleteCmd.AddCommand(deleteUserCmd)
 
-	deleteUserCmd.PersistentFlags().StringVar(&deleteUserInstanceId, "instance-id", "", "The UUID of the instance to get the users for.")
+	deleteUserCmd.PersistentFlags().StringVar(&deleteUserInstanceId, "instance-id", "", "The UUID of the instance to delete the users from.")
 	_ = deleteUserCmd.MarkPersistentFlagRequired("instance-id")
 }
 
