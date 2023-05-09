@@ -21,6 +21,32 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// Acl defines model for acl.
+type Acl struct {
+	// Cidr The given IP/IP Range that is permitted to access.
+	Cidr string `json:"cidr"`
+
+	// Id A auto generated unique id which identifies the acl.
+	Id string `json:"id"`
+}
+
+// AclCreate defines model for aclCreate.
+type AclCreate struct {
+	// Cidr The given IP/IP Range that is permitted to access.
+	Cidr string `json:"cidr"`
+}
+
+// AclList defines model for aclList.
+type AclList struct {
+	Acls []Acl `json:"acls"`
+}
+
+// AclUpdate defines model for aclUpdate.
+type AclUpdate struct {
+	// Cidr The given IP/IP Range that is permitted to access.
+	Cidr string `json:"cidr"`
+}
+
 // Instance defines model for instance.
 type Instance struct {
 	// ApiUrl The API endpoint for connecting to the secrets engine.
@@ -101,6 +127,12 @@ type UserUpdate struct {
 
 // PostV1ProjectsProjectIdInstancesJSONRequestBody defines body for PostV1ProjectsProjectIdInstances for application/json ContentType.
 type PostV1ProjectsProjectIdInstancesJSONRequestBody = InstanceCreate
+
+// PostV1ProjectsProjectIdInstancesInstanceIdAclsJSONRequestBody defines body for PostV1ProjectsProjectIdInstancesInstanceIdAcls for application/json ContentType.
+type PostV1ProjectsProjectIdInstancesInstanceIdAclsJSONRequestBody = AclCreate
+
+// PutV1ProjectsProjectIdInstancesInstanceIdAclsAclIdJSONRequestBody defines body for PutV1ProjectsProjectIdInstancesInstanceIdAclsAclId for application/json ContentType.
+type PutV1ProjectsProjectIdInstancesInstanceIdAclsAclIdJSONRequestBody = AclUpdate
 
 // PostV1ProjectsProjectIdInstancesInstanceIdUsersJSONRequestBody defines body for PostV1ProjectsProjectIdInstancesInstanceIdUsers for application/json ContentType.
 type PostV1ProjectsProjectIdInstancesInstanceIdUsersJSONRequestBody = UserCreate
@@ -195,6 +227,25 @@ type ClientInterface interface {
 	// GetV1ProjectsProjectIdInstancesInstanceId request
 	GetV1ProjectsProjectIdInstancesInstanceId(ctx context.Context, projectId string, instanceId string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// GetV1ProjectsProjectIdInstancesInstanceIdAcls request
+	GetV1ProjectsProjectIdInstancesInstanceIdAcls(ctx context.Context, projectId string, instanceId string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PostV1ProjectsProjectIdInstancesInstanceIdAcls request with any body
+	PostV1ProjectsProjectIdInstancesInstanceIdAclsWithBody(ctx context.Context, projectId string, instanceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PostV1ProjectsProjectIdInstancesInstanceIdAcls(ctx context.Context, projectId string, instanceId string, body PostV1ProjectsProjectIdInstancesInstanceIdAclsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteV1ProjectsProjectIdInstancesInstanceIdAclsAclId request
+	DeleteV1ProjectsProjectIdInstancesInstanceIdAclsAclId(ctx context.Context, projectId string, instanceId string, aclId string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetV1ProjectsProjectIdInstancesInstanceIdAclsAclId request
+	GetV1ProjectsProjectIdInstancesInstanceIdAclsAclId(ctx context.Context, projectId string, instanceId string, aclId string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PutV1ProjectsProjectIdInstancesInstanceIdAclsAclId request with any body
+	PutV1ProjectsProjectIdInstancesInstanceIdAclsAclIdWithBody(ctx context.Context, projectId string, instanceId string, aclId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PutV1ProjectsProjectIdInstancesInstanceIdAclsAclId(ctx context.Context, projectId string, instanceId string, aclId string, body PutV1ProjectsProjectIdInstancesInstanceIdAclsAclIdJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// GetV1ProjectsProjectIdInstancesInstanceIdUsers request
 	GetV1ProjectsProjectIdInstancesInstanceIdUsers(ctx context.Context, projectId string, instanceId string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -265,6 +316,90 @@ func (c *Client) DeleteV1ProjectsProjectIdInstancesInstanceId(ctx context.Contex
 
 func (c *Client) GetV1ProjectsProjectIdInstancesInstanceId(ctx context.Context, projectId string, instanceId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetV1ProjectsProjectIdInstancesInstanceIdRequest(c.Server, projectId, instanceId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetV1ProjectsProjectIdInstancesInstanceIdAcls(ctx context.Context, projectId string, instanceId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetV1ProjectsProjectIdInstancesInstanceIdAclsRequest(c.Server, projectId, instanceId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostV1ProjectsProjectIdInstancesInstanceIdAclsWithBody(ctx context.Context, projectId string, instanceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostV1ProjectsProjectIdInstancesInstanceIdAclsRequestWithBody(c.Server, projectId, instanceId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostV1ProjectsProjectIdInstancesInstanceIdAcls(ctx context.Context, projectId string, instanceId string, body PostV1ProjectsProjectIdInstancesInstanceIdAclsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostV1ProjectsProjectIdInstancesInstanceIdAclsRequest(c.Server, projectId, instanceId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteV1ProjectsProjectIdInstancesInstanceIdAclsAclId(ctx context.Context, projectId string, instanceId string, aclId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteV1ProjectsProjectIdInstancesInstanceIdAclsAclIdRequest(c.Server, projectId, instanceId, aclId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetV1ProjectsProjectIdInstancesInstanceIdAclsAclId(ctx context.Context, projectId string, instanceId string, aclId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetV1ProjectsProjectIdInstancesInstanceIdAclsAclIdRequest(c.Server, projectId, instanceId, aclId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PutV1ProjectsProjectIdInstancesInstanceIdAclsAclIdWithBody(ctx context.Context, projectId string, instanceId string, aclId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPutV1ProjectsProjectIdInstancesInstanceIdAclsAclIdRequestWithBody(c.Server, projectId, instanceId, aclId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PutV1ProjectsProjectIdInstancesInstanceIdAclsAclId(ctx context.Context, projectId string, instanceId string, aclId string, body PutV1ProjectsProjectIdInstancesInstanceIdAclsAclIdJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPutV1ProjectsProjectIdInstancesInstanceIdAclsAclIdRequest(c.Server, projectId, instanceId, aclId, body)
 	if err != nil {
 		return nil, err
 	}
@@ -518,6 +653,258 @@ func NewGetV1ProjectsProjectIdInstancesInstanceIdRequest(server string, projectI
 	if err != nil {
 		return nil, err
 	}
+
+	return req, nil
+}
+
+// NewGetV1ProjectsProjectIdInstancesInstanceIdAclsRequest generates requests for GetV1ProjectsProjectIdInstancesInstanceIdAcls
+func NewGetV1ProjectsProjectIdInstancesInstanceIdAclsRequest(server string, projectId string, instanceId string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "projectId", runtime.ParamLocationPath, projectId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "instanceId", runtime.ParamLocationPath, instanceId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/projects/%s/instances/%s/acls", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewPostV1ProjectsProjectIdInstancesInstanceIdAclsRequest calls the generic PostV1ProjectsProjectIdInstancesInstanceIdAcls builder with application/json body
+func NewPostV1ProjectsProjectIdInstancesInstanceIdAclsRequest(server string, projectId string, instanceId string, body PostV1ProjectsProjectIdInstancesInstanceIdAclsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPostV1ProjectsProjectIdInstancesInstanceIdAclsRequestWithBody(server, projectId, instanceId, "application/json", bodyReader)
+}
+
+// NewPostV1ProjectsProjectIdInstancesInstanceIdAclsRequestWithBody generates requests for PostV1ProjectsProjectIdInstancesInstanceIdAcls with any type of body
+func NewPostV1ProjectsProjectIdInstancesInstanceIdAclsRequestWithBody(server string, projectId string, instanceId string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "projectId", runtime.ParamLocationPath, projectId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "instanceId", runtime.ParamLocationPath, instanceId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/projects/%s/instances/%s/acls", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewDeleteV1ProjectsProjectIdInstancesInstanceIdAclsAclIdRequest generates requests for DeleteV1ProjectsProjectIdInstancesInstanceIdAclsAclId
+func NewDeleteV1ProjectsProjectIdInstancesInstanceIdAclsAclIdRequest(server string, projectId string, instanceId string, aclId string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "projectId", runtime.ParamLocationPath, projectId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "instanceId", runtime.ParamLocationPath, instanceId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam2 string
+
+	pathParam2, err = runtime.StyleParamWithLocation("simple", false, "aclId", runtime.ParamLocationPath, aclId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/projects/%s/instances/%s/acls/%s", pathParam0, pathParam1, pathParam2)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetV1ProjectsProjectIdInstancesInstanceIdAclsAclIdRequest generates requests for GetV1ProjectsProjectIdInstancesInstanceIdAclsAclId
+func NewGetV1ProjectsProjectIdInstancesInstanceIdAclsAclIdRequest(server string, projectId string, instanceId string, aclId string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "projectId", runtime.ParamLocationPath, projectId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "instanceId", runtime.ParamLocationPath, instanceId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam2 string
+
+	pathParam2, err = runtime.StyleParamWithLocation("simple", false, "aclId", runtime.ParamLocationPath, aclId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/projects/%s/instances/%s/acls/%s", pathParam0, pathParam1, pathParam2)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewPutV1ProjectsProjectIdInstancesInstanceIdAclsAclIdRequest calls the generic PutV1ProjectsProjectIdInstancesInstanceIdAclsAclId builder with application/json body
+func NewPutV1ProjectsProjectIdInstancesInstanceIdAclsAclIdRequest(server string, projectId string, instanceId string, aclId string, body PutV1ProjectsProjectIdInstancesInstanceIdAclsAclIdJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPutV1ProjectsProjectIdInstancesInstanceIdAclsAclIdRequestWithBody(server, projectId, instanceId, aclId, "application/json", bodyReader)
+}
+
+// NewPutV1ProjectsProjectIdInstancesInstanceIdAclsAclIdRequestWithBody generates requests for PutV1ProjectsProjectIdInstancesInstanceIdAclsAclId with any type of body
+func NewPutV1ProjectsProjectIdInstancesInstanceIdAclsAclIdRequestWithBody(server string, projectId string, instanceId string, aclId string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "projectId", runtime.ParamLocationPath, projectId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "instanceId", runtime.ParamLocationPath, instanceId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam2 string
+
+	pathParam2, err = runtime.StyleParamWithLocation("simple", false, "aclId", runtime.ParamLocationPath, aclId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/projects/%s/instances/%s/acls/%s", pathParam0, pathParam1, pathParam2)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PUT", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
 
 	return req, nil
 }
@@ -831,6 +1218,25 @@ type ClientWithResponsesInterface interface {
 	// GetV1ProjectsProjectIdInstancesInstanceId request
 	GetV1ProjectsProjectIdInstancesInstanceIdWithResponse(ctx context.Context, projectId string, instanceId string, reqEditors ...RequestEditorFn) (*GetV1ProjectsProjectIdInstancesInstanceIdResponse, error)
 
+	// GetV1ProjectsProjectIdInstancesInstanceIdAcls request
+	GetV1ProjectsProjectIdInstancesInstanceIdAclsWithResponse(ctx context.Context, projectId string, instanceId string, reqEditors ...RequestEditorFn) (*GetV1ProjectsProjectIdInstancesInstanceIdAclsResponse, error)
+
+	// PostV1ProjectsProjectIdInstancesInstanceIdAcls request with any body
+	PostV1ProjectsProjectIdInstancesInstanceIdAclsWithBodyWithResponse(ctx context.Context, projectId string, instanceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostV1ProjectsProjectIdInstancesInstanceIdAclsResponse, error)
+
+	PostV1ProjectsProjectIdInstancesInstanceIdAclsWithResponse(ctx context.Context, projectId string, instanceId string, body PostV1ProjectsProjectIdInstancesInstanceIdAclsJSONRequestBody, reqEditors ...RequestEditorFn) (*PostV1ProjectsProjectIdInstancesInstanceIdAclsResponse, error)
+
+	// DeleteV1ProjectsProjectIdInstancesInstanceIdAclsAclId request
+	DeleteV1ProjectsProjectIdInstancesInstanceIdAclsAclIdWithResponse(ctx context.Context, projectId string, instanceId string, aclId string, reqEditors ...RequestEditorFn) (*DeleteV1ProjectsProjectIdInstancesInstanceIdAclsAclIdResponse, error)
+
+	// GetV1ProjectsProjectIdInstancesInstanceIdAclsAclId request
+	GetV1ProjectsProjectIdInstancesInstanceIdAclsAclIdWithResponse(ctx context.Context, projectId string, instanceId string, aclId string, reqEditors ...RequestEditorFn) (*GetV1ProjectsProjectIdInstancesInstanceIdAclsAclIdResponse, error)
+
+	// PutV1ProjectsProjectIdInstancesInstanceIdAclsAclId request with any body
+	PutV1ProjectsProjectIdInstancesInstanceIdAclsAclIdWithBodyWithResponse(ctx context.Context, projectId string, instanceId string, aclId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PutV1ProjectsProjectIdInstancesInstanceIdAclsAclIdResponse, error)
+
+	PutV1ProjectsProjectIdInstancesInstanceIdAclsAclIdWithResponse(ctx context.Context, projectId string, instanceId string, aclId string, body PutV1ProjectsProjectIdInstancesInstanceIdAclsAclIdJSONRequestBody, reqEditors ...RequestEditorFn) (*PutV1ProjectsProjectIdInstancesInstanceIdAclsAclIdResponse, error)
+
 	// GetV1ProjectsProjectIdInstancesInstanceIdUsers request
 	GetV1ProjectsProjectIdInstancesInstanceIdUsersWithResponse(ctx context.Context, projectId string, instanceId string, reqEditors ...RequestEditorFn) (*GetV1ProjectsProjectIdInstancesInstanceIdUsersResponse, error)
 
@@ -932,6 +1338,114 @@ func (r GetV1ProjectsProjectIdInstancesInstanceIdResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r GetV1ProjectsProjectIdInstancesInstanceIdResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetV1ProjectsProjectIdInstancesInstanceIdAclsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *AclList
+}
+
+// Status returns HTTPResponse.Status
+func (r GetV1ProjectsProjectIdInstancesInstanceIdAclsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetV1ProjectsProjectIdInstancesInstanceIdAclsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PostV1ProjectsProjectIdInstancesInstanceIdAclsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *Acl
+}
+
+// Status returns HTTPResponse.Status
+func (r PostV1ProjectsProjectIdInstancesInstanceIdAclsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PostV1ProjectsProjectIdInstancesInstanceIdAclsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DeleteV1ProjectsProjectIdInstancesInstanceIdAclsAclIdResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteV1ProjectsProjectIdInstancesInstanceIdAclsAclIdResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteV1ProjectsProjectIdInstancesInstanceIdAclsAclIdResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetV1ProjectsProjectIdInstancesInstanceIdAclsAclIdResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *Acl
+}
+
+// Status returns HTTPResponse.Status
+func (r GetV1ProjectsProjectIdInstancesInstanceIdAclsAclIdResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetV1ProjectsProjectIdInstancesInstanceIdAclsAclIdResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PutV1ProjectsProjectIdInstancesInstanceIdAclsAclIdResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r PutV1ProjectsProjectIdInstancesInstanceIdAclsAclIdResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PutV1ProjectsProjectIdInstancesInstanceIdAclsAclIdResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -1090,6 +1604,67 @@ func (c *ClientWithResponses) GetV1ProjectsProjectIdInstancesInstanceIdWithRespo
 	return ParseGetV1ProjectsProjectIdInstancesInstanceIdResponse(rsp)
 }
 
+// GetV1ProjectsProjectIdInstancesInstanceIdAclsWithResponse request returning *GetV1ProjectsProjectIdInstancesInstanceIdAclsResponse
+func (c *ClientWithResponses) GetV1ProjectsProjectIdInstancesInstanceIdAclsWithResponse(ctx context.Context, projectId string, instanceId string, reqEditors ...RequestEditorFn) (*GetV1ProjectsProjectIdInstancesInstanceIdAclsResponse, error) {
+	rsp, err := c.GetV1ProjectsProjectIdInstancesInstanceIdAcls(ctx, projectId, instanceId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetV1ProjectsProjectIdInstancesInstanceIdAclsResponse(rsp)
+}
+
+// PostV1ProjectsProjectIdInstancesInstanceIdAclsWithBodyWithResponse request with arbitrary body returning *PostV1ProjectsProjectIdInstancesInstanceIdAclsResponse
+func (c *ClientWithResponses) PostV1ProjectsProjectIdInstancesInstanceIdAclsWithBodyWithResponse(ctx context.Context, projectId string, instanceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostV1ProjectsProjectIdInstancesInstanceIdAclsResponse, error) {
+	rsp, err := c.PostV1ProjectsProjectIdInstancesInstanceIdAclsWithBody(ctx, projectId, instanceId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostV1ProjectsProjectIdInstancesInstanceIdAclsResponse(rsp)
+}
+
+func (c *ClientWithResponses) PostV1ProjectsProjectIdInstancesInstanceIdAclsWithResponse(ctx context.Context, projectId string, instanceId string, body PostV1ProjectsProjectIdInstancesInstanceIdAclsJSONRequestBody, reqEditors ...RequestEditorFn) (*PostV1ProjectsProjectIdInstancesInstanceIdAclsResponse, error) {
+	rsp, err := c.PostV1ProjectsProjectIdInstancesInstanceIdAcls(ctx, projectId, instanceId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostV1ProjectsProjectIdInstancesInstanceIdAclsResponse(rsp)
+}
+
+// DeleteV1ProjectsProjectIdInstancesInstanceIdAclsAclIdWithResponse request returning *DeleteV1ProjectsProjectIdInstancesInstanceIdAclsAclIdResponse
+func (c *ClientWithResponses) DeleteV1ProjectsProjectIdInstancesInstanceIdAclsAclIdWithResponse(ctx context.Context, projectId string, instanceId string, aclId string, reqEditors ...RequestEditorFn) (*DeleteV1ProjectsProjectIdInstancesInstanceIdAclsAclIdResponse, error) {
+	rsp, err := c.DeleteV1ProjectsProjectIdInstancesInstanceIdAclsAclId(ctx, projectId, instanceId, aclId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteV1ProjectsProjectIdInstancesInstanceIdAclsAclIdResponse(rsp)
+}
+
+// GetV1ProjectsProjectIdInstancesInstanceIdAclsAclIdWithResponse request returning *GetV1ProjectsProjectIdInstancesInstanceIdAclsAclIdResponse
+func (c *ClientWithResponses) GetV1ProjectsProjectIdInstancesInstanceIdAclsAclIdWithResponse(ctx context.Context, projectId string, instanceId string, aclId string, reqEditors ...RequestEditorFn) (*GetV1ProjectsProjectIdInstancesInstanceIdAclsAclIdResponse, error) {
+	rsp, err := c.GetV1ProjectsProjectIdInstancesInstanceIdAclsAclId(ctx, projectId, instanceId, aclId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetV1ProjectsProjectIdInstancesInstanceIdAclsAclIdResponse(rsp)
+}
+
+// PutV1ProjectsProjectIdInstancesInstanceIdAclsAclIdWithBodyWithResponse request with arbitrary body returning *PutV1ProjectsProjectIdInstancesInstanceIdAclsAclIdResponse
+func (c *ClientWithResponses) PutV1ProjectsProjectIdInstancesInstanceIdAclsAclIdWithBodyWithResponse(ctx context.Context, projectId string, instanceId string, aclId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PutV1ProjectsProjectIdInstancesInstanceIdAclsAclIdResponse, error) {
+	rsp, err := c.PutV1ProjectsProjectIdInstancesInstanceIdAclsAclIdWithBody(ctx, projectId, instanceId, aclId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePutV1ProjectsProjectIdInstancesInstanceIdAclsAclIdResponse(rsp)
+}
+
+func (c *ClientWithResponses) PutV1ProjectsProjectIdInstancesInstanceIdAclsAclIdWithResponse(ctx context.Context, projectId string, instanceId string, aclId string, body PutV1ProjectsProjectIdInstancesInstanceIdAclsAclIdJSONRequestBody, reqEditors ...RequestEditorFn) (*PutV1ProjectsProjectIdInstancesInstanceIdAclsAclIdResponse, error) {
+	rsp, err := c.PutV1ProjectsProjectIdInstancesInstanceIdAclsAclId(ctx, projectId, instanceId, aclId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePutV1ProjectsProjectIdInstancesInstanceIdAclsAclIdResponse(rsp)
+}
+
 // GetV1ProjectsProjectIdInstancesInstanceIdUsersWithResponse request returning *GetV1ProjectsProjectIdInstancesInstanceIdUsersResponse
 func (c *ClientWithResponses) GetV1ProjectsProjectIdInstancesInstanceIdUsersWithResponse(ctx context.Context, projectId string, instanceId string, reqEditors ...RequestEditorFn) (*GetV1ProjectsProjectIdInstancesInstanceIdUsersResponse, error) {
 	rsp, err := c.GetV1ProjectsProjectIdInstancesInstanceIdUsers(ctx, projectId, instanceId, reqEditors...)
@@ -1245,6 +1820,116 @@ func ParseGetV1ProjectsProjectIdInstancesInstanceIdResponse(rsp *http.Response) 
 	return response, nil
 }
 
+// ParseGetV1ProjectsProjectIdInstancesInstanceIdAclsResponse parses an HTTP response from a GetV1ProjectsProjectIdInstancesInstanceIdAclsWithResponse call
+func ParseGetV1ProjectsProjectIdInstancesInstanceIdAclsResponse(rsp *http.Response) (*GetV1ProjectsProjectIdInstancesInstanceIdAclsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetV1ProjectsProjectIdInstancesInstanceIdAclsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AclList
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePostV1ProjectsProjectIdInstancesInstanceIdAclsResponse parses an HTTP response from a PostV1ProjectsProjectIdInstancesInstanceIdAclsWithResponse call
+func ParsePostV1ProjectsProjectIdInstancesInstanceIdAclsResponse(rsp *http.Response) (*PostV1ProjectsProjectIdInstancesInstanceIdAclsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PostV1ProjectsProjectIdInstancesInstanceIdAclsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest Acl
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteV1ProjectsProjectIdInstancesInstanceIdAclsAclIdResponse parses an HTTP response from a DeleteV1ProjectsProjectIdInstancesInstanceIdAclsAclIdWithResponse call
+func ParseDeleteV1ProjectsProjectIdInstancesInstanceIdAclsAclIdResponse(rsp *http.Response) (*DeleteV1ProjectsProjectIdInstancesInstanceIdAclsAclIdResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteV1ProjectsProjectIdInstancesInstanceIdAclsAclIdResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
+// ParseGetV1ProjectsProjectIdInstancesInstanceIdAclsAclIdResponse parses an HTTP response from a GetV1ProjectsProjectIdInstancesInstanceIdAclsAclIdWithResponse call
+func ParseGetV1ProjectsProjectIdInstancesInstanceIdAclsAclIdResponse(rsp *http.Response) (*GetV1ProjectsProjectIdInstancesInstanceIdAclsAclIdResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetV1ProjectsProjectIdInstancesInstanceIdAclsAclIdResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Acl
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePutV1ProjectsProjectIdInstancesInstanceIdAclsAclIdResponse parses an HTTP response from a PutV1ProjectsProjectIdInstancesInstanceIdAclsAclIdWithResponse call
+func ParsePutV1ProjectsProjectIdInstancesInstanceIdAclsAclIdResponse(rsp *http.Response) (*PutV1ProjectsProjectIdInstancesInstanceIdAclsAclIdResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PutV1ProjectsProjectIdInstancesInstanceIdAclsAclIdResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
 // ParseGetV1ProjectsProjectIdInstancesInstanceIdUsersResponse parses an HTTP response from a GetV1ProjectsProjectIdInstancesInstanceIdUsersWithResponse call
 func ParseGetV1ProjectsProjectIdInstancesInstanceIdUsersResponse(rsp *http.Response) (*GetV1ProjectsProjectIdInstancesInstanceIdUsersResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -1370,6 +2055,21 @@ type ServerInterface interface {
 	// (GET /v1/projects/{projectId}/instances/{instanceId})
 	GetV1ProjectsProjectIdInstancesInstanceId(ctx echo.Context, projectId string, instanceId string) error
 
+	// (GET /v1/projects/{projectId}/instances/{instanceId}/acls)
+	GetV1ProjectsProjectIdInstancesInstanceIdAcls(ctx echo.Context, projectId string, instanceId string) error
+
+	// (POST /v1/projects/{projectId}/instances/{instanceId}/acls)
+	PostV1ProjectsProjectIdInstancesInstanceIdAcls(ctx echo.Context, projectId string, instanceId string) error
+
+	// (DELETE /v1/projects/{projectId}/instances/{instanceId}/acls/{aclId})
+	DeleteV1ProjectsProjectIdInstancesInstanceIdAclsAclId(ctx echo.Context, projectId string, instanceId string, aclId string) error
+
+	// (GET /v1/projects/{projectId}/instances/{instanceId}/acls/{aclId})
+	GetV1ProjectsProjectIdInstancesInstanceIdAclsAclId(ctx echo.Context, projectId string, instanceId string, aclId string) error
+
+	// (PUT /v1/projects/{projectId}/instances/{instanceId}/acls/{aclId})
+	PutV1ProjectsProjectIdInstancesInstanceIdAclsAclId(ctx echo.Context, projectId string, instanceId string, aclId string) error
+
 	// (GET /v1/projects/{projectId}/instances/{instanceId}/users)
 	GetV1ProjectsProjectIdInstancesInstanceIdUsers(ctx echo.Context, projectId string, instanceId string) error
 
@@ -1468,6 +2168,150 @@ func (w *ServerInterfaceWrapper) GetV1ProjectsProjectIdInstancesInstanceId(ctx e
 
 	// Invoke the callback with all the unmarshalled arguments
 	err = w.Handler.GetV1ProjectsProjectIdInstancesInstanceId(ctx, projectId, instanceId)
+	return err
+}
+
+// GetV1ProjectsProjectIdInstancesInstanceIdAcls converts echo context to params.
+func (w *ServerInterfaceWrapper) GetV1ProjectsProjectIdInstancesInstanceIdAcls(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "projectId" -------------
+	var projectId string
+
+	err = runtime.BindStyledParameterWithLocation("simple", false, "projectId", runtime.ParamLocationPath, ctx.Param("projectId"), &projectId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter projectId: %s", err))
+	}
+
+	// ------------- Path parameter "instanceId" -------------
+	var instanceId string
+
+	err = runtime.BindStyledParameterWithLocation("simple", false, "instanceId", runtime.ParamLocationPath, ctx.Param("instanceId"), &instanceId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter instanceId: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshalled arguments
+	err = w.Handler.GetV1ProjectsProjectIdInstancesInstanceIdAcls(ctx, projectId, instanceId)
+	return err
+}
+
+// PostV1ProjectsProjectIdInstancesInstanceIdAcls converts echo context to params.
+func (w *ServerInterfaceWrapper) PostV1ProjectsProjectIdInstancesInstanceIdAcls(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "projectId" -------------
+	var projectId string
+
+	err = runtime.BindStyledParameterWithLocation("simple", false, "projectId", runtime.ParamLocationPath, ctx.Param("projectId"), &projectId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter projectId: %s", err))
+	}
+
+	// ------------- Path parameter "instanceId" -------------
+	var instanceId string
+
+	err = runtime.BindStyledParameterWithLocation("simple", false, "instanceId", runtime.ParamLocationPath, ctx.Param("instanceId"), &instanceId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter instanceId: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshalled arguments
+	err = w.Handler.PostV1ProjectsProjectIdInstancesInstanceIdAcls(ctx, projectId, instanceId)
+	return err
+}
+
+// DeleteV1ProjectsProjectIdInstancesInstanceIdAclsAclId converts echo context to params.
+func (w *ServerInterfaceWrapper) DeleteV1ProjectsProjectIdInstancesInstanceIdAclsAclId(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "projectId" -------------
+	var projectId string
+
+	err = runtime.BindStyledParameterWithLocation("simple", false, "projectId", runtime.ParamLocationPath, ctx.Param("projectId"), &projectId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter projectId: %s", err))
+	}
+
+	// ------------- Path parameter "instanceId" -------------
+	var instanceId string
+
+	err = runtime.BindStyledParameterWithLocation("simple", false, "instanceId", runtime.ParamLocationPath, ctx.Param("instanceId"), &instanceId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter instanceId: %s", err))
+	}
+
+	// ------------- Path parameter "aclId" -------------
+	var aclId string
+
+	err = runtime.BindStyledParameterWithLocation("simple", false, "aclId", runtime.ParamLocationPath, ctx.Param("aclId"), &aclId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter aclId: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshalled arguments
+	err = w.Handler.DeleteV1ProjectsProjectIdInstancesInstanceIdAclsAclId(ctx, projectId, instanceId, aclId)
+	return err
+}
+
+// GetV1ProjectsProjectIdInstancesInstanceIdAclsAclId converts echo context to params.
+func (w *ServerInterfaceWrapper) GetV1ProjectsProjectIdInstancesInstanceIdAclsAclId(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "projectId" -------------
+	var projectId string
+
+	err = runtime.BindStyledParameterWithLocation("simple", false, "projectId", runtime.ParamLocationPath, ctx.Param("projectId"), &projectId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter projectId: %s", err))
+	}
+
+	// ------------- Path parameter "instanceId" -------------
+	var instanceId string
+
+	err = runtime.BindStyledParameterWithLocation("simple", false, "instanceId", runtime.ParamLocationPath, ctx.Param("instanceId"), &instanceId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter instanceId: %s", err))
+	}
+
+	// ------------- Path parameter "aclId" -------------
+	var aclId string
+
+	err = runtime.BindStyledParameterWithLocation("simple", false, "aclId", runtime.ParamLocationPath, ctx.Param("aclId"), &aclId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter aclId: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshalled arguments
+	err = w.Handler.GetV1ProjectsProjectIdInstancesInstanceIdAclsAclId(ctx, projectId, instanceId, aclId)
+	return err
+}
+
+// PutV1ProjectsProjectIdInstancesInstanceIdAclsAclId converts echo context to params.
+func (w *ServerInterfaceWrapper) PutV1ProjectsProjectIdInstancesInstanceIdAclsAclId(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "projectId" -------------
+	var projectId string
+
+	err = runtime.BindStyledParameterWithLocation("simple", false, "projectId", runtime.ParamLocationPath, ctx.Param("projectId"), &projectId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter projectId: %s", err))
+	}
+
+	// ------------- Path parameter "instanceId" -------------
+	var instanceId string
+
+	err = runtime.BindStyledParameterWithLocation("simple", false, "instanceId", runtime.ParamLocationPath, ctx.Param("instanceId"), &instanceId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter instanceId: %s", err))
+	}
+
+	// ------------- Path parameter "aclId" -------------
+	var aclId string
+
+	err = runtime.BindStyledParameterWithLocation("simple", false, "aclId", runtime.ParamLocationPath, ctx.Param("aclId"), &aclId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter aclId: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshalled arguments
+	err = w.Handler.PutV1ProjectsProjectIdInstancesInstanceIdAclsAclId(ctx, projectId, instanceId, aclId)
 	return err
 }
 
@@ -1647,6 +2491,11 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.POST(baseURL+"/v1/projects/:projectId/instances", wrapper.PostV1ProjectsProjectIdInstances)
 	router.DELETE(baseURL+"/v1/projects/:projectId/instances/:instanceId", wrapper.DeleteV1ProjectsProjectIdInstancesInstanceId)
 	router.GET(baseURL+"/v1/projects/:projectId/instances/:instanceId", wrapper.GetV1ProjectsProjectIdInstancesInstanceId)
+	router.GET(baseURL+"/v1/projects/:projectId/instances/:instanceId/acls", wrapper.GetV1ProjectsProjectIdInstancesInstanceIdAcls)
+	router.POST(baseURL+"/v1/projects/:projectId/instances/:instanceId/acls", wrapper.PostV1ProjectsProjectIdInstancesInstanceIdAcls)
+	router.DELETE(baseURL+"/v1/projects/:projectId/instances/:instanceId/acls/:aclId", wrapper.DeleteV1ProjectsProjectIdInstancesInstanceIdAclsAclId)
+	router.GET(baseURL+"/v1/projects/:projectId/instances/:instanceId/acls/:aclId", wrapper.GetV1ProjectsProjectIdInstancesInstanceIdAclsAclId)
+	router.PUT(baseURL+"/v1/projects/:projectId/instances/:instanceId/acls/:aclId", wrapper.PutV1ProjectsProjectIdInstancesInstanceIdAclsAclId)
 	router.GET(baseURL+"/v1/projects/:projectId/instances/:instanceId/users", wrapper.GetV1ProjectsProjectIdInstancesInstanceIdUsers)
 	router.POST(baseURL+"/v1/projects/:projectId/instances/:instanceId/users", wrapper.PostV1ProjectsProjectIdInstancesInstanceIdUsers)
 	router.DELETE(baseURL+"/v1/projects/:projectId/instances/:instanceId/users/:userId", wrapper.DeleteV1ProjectsProjectIdInstancesInstanceIdUsersUserId)
@@ -1658,34 +2507,44 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"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",
-	"2AjAJQAA",
+	"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",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file
