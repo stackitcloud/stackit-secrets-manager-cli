@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-VERSION=1.12.4
+VERSION=1.13.0
 echo "installing oapi-codegen v${VERSION}"
 
 TARGET_DIR=$(pwd)/bin

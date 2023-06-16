@@ -28,14 +28,14 @@ update-openapi-spec:
 	curl -o scripts/openapi.yaml https://docs.api.eu01.stackit.cloud/oas/secrets-manager
 
 .PHONY: release
-release:
+release: goreleaser
 	git tag -a v$(VERSION) -m "Release v$(VERSION)"
 	git push origin v$(VERSION)
 	$(GORELEASER) check
 	$(GORELEASER) release --clean
 
 .PHONY: release-local
-release-local:
+release-local: goreleaser
 	$(GORELEASER) release --snapshot --clean
 
 # ===== auto generate client from openapi yaml spec =====

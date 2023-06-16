@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-VERSION=1.51.1
+VERSION=1.53.3
 echo "installing golangci-lint v${VERSION}"
 
 echo "operating system: ${OSTYPE}"
