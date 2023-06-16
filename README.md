@@ -44,6 +44,16 @@ To get a list of all secrets manager instances run:
 $ stackit-secrets-manager get instances
 ```
 
+To create an ACL for your instance to restict login IP ranges:
+```shell
+$ stackit-secrets-manager create acl --cidr 192.0.2.0/24 --instance-id 6604b709-774f-4cb2-8b72-3efbba893283
+```
+
+To get a list of all ACLs run:
+```shell
+$ stackit-secrets-manager get acls --instance-id 6604b709-774f-4cb2-8b72-3efbba893283
+```
+
 To create a user with write access for that instance:
 
 ```shell
