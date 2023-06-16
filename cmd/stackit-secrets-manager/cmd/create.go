@@ -6,8 +6,8 @@ import (
 
 var createCmd = &cobra.Command{
 	Use:   "create",
-	Short: "Creates, updates and deletes resources for the Secrets Manager.",
-	Long:  `Creates, updates and deletes resources for the Secrets Manager.`,
+	Short: "Creates resources for the Secrets Manager.",
+	Long:  `Creates resources for the Secrets Manager.`,
 }
 
 func init() {

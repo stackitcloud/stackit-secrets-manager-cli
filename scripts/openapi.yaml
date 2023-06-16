@@ -1,6 +1,57 @@
 {
   "components": {
     "schemas": {
+      "acl": {
+        "properties": {
+          "cidr": {
+            "description": "The given IP/IP Range that is permitted to access.",
+            "type": "string"
+          },
+          "id": {
+            "description": "A auto generated unique id which identifies the acl.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "cidr"
+        ]
+      },
+      "aclCreate": {
+        "properties": {
+          "cidr": {
+            "description": "The given IP/IP Range that is permitted to access.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "cidr"
+        ]
+      },
+      "aclList": {
+        "properties": {
+          "acls": {
+            "items": {
+              "$ref": "#/components/schemas/acl"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "acls"
+        ]
+      },
+      "aclUpdate": {
+        "properties": {
+          "cidr": {
+            "description": "The given IP/IP Range that is permitted to access.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "cidr"
+        ]
+      },
       "instance": {
         "properties": {
           "apiUrl": {
@@ -147,9 +198,9 @@
     }
   },
   "info": {
-    "description": "This API is a BETA API.\n\nThere are no guarantees for stability or compatibility of the API itself. Breaking changes to the APi can happen\nany time.\n\nThere are no guarantees for the availability of the resources which are deployed by the API.\n\nDo not use this API for production workload where you cannot tolerate loss of data or unavailability of services.\n\nThis API provides endpoints for managing the Secrets-Manager.\n",
+    "description": "This API provides endpoints for managing the Secrets-Manager.\n",
     "title": "Secrets-Manager API",
-    "version": "0.10.0"
+    "version": "1.1.0"
   },
   "openapi": "3.0.3",
   "paths": {
@@ -173,7 +224,10 @@
           "500": {
             "description": "Internal server error. The application experienced some unexpected situation."
           }
-        }
+        },
+        "tags": [
+          "instances"
+        ]
       },
       "parameters": [
         {
@@ -211,13 +265,19 @@
             },
             "description": "Instance was created successfully"
           },
+          "400": {
+            "description": "Bad Request. Invalid instance name."
+          },
           "401": {
             "description": "Unauthorized. You may have provided no or wrong credentials."
           },
           "500": {
             "description": "Internal server error. The application experienced some unexpected situation."
           }
-        }
+        },
+        "tags": [
+          "instances"
+        ]
       }
     },
     "/v1/projects/{projectId}/instances/{instanceId}": {
@@ -230,10 +290,16 @@
           "401": {
             "description": "Unauthorized. You may have provided no or wrong credentials."
           },
+          "404": {
+            "description": "Not found. Instance not found."
+          },
           "500": {
             "description": "Internal server error. The application experienced some unexpected situation."
           }
-        }
+        },
+        "tags": [
+          "instances"
+        ]
       },
       "get": {
         "description": "Returns the details for the given Secrets Manager instance.",
@@ -251,10 +317,16 @@
           "401": {
             "description": "Unauthorized. You may have provided no or wrong credentials."
           },
+          "404": {
+            "description": "Not found. Instance not found."
+          },
           "500": {
             "description": "Internal server error. The application experienced some unexpected situation."
           }
-        }
+        },
+        "tags": [
+          "instances"
+        ]
       },
       "parameters": [
         {
@@ -281,6 +353,216 @@
         }
       ]
     },
+    "/v1/projects/{projectId}/instances/{instanceId}/acls": {
+      "get": {
+        "description": "Returns the acls for the given Secrets Manager instance.",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/aclList"
+                }
+              }
+            },
+            "description": "All acls for the Secrets Manager instance have been returned."
+          },
+          "401": {
+            "description": "Unauthorized. You may have provided no or wrong credentials."
+          },
+          "404": {
+            "description": "Not found. Instance not found."
+          },
+          "500": {
+            "description": "Internal server error. The application experienced some unexpected situation."
+          }
+        },
+        "tags": [
+          "acls"
+        ]
+      },
+      "parameters": [
+        {
+          "description": "The STACKIT portal project UUID the Secrets Manager instance is part of.",
+          "in": "path",
+          "name": "projectId",
+          "required": true,
+          "schema": {
+            "format": "uuid",
+            "type": "string",
+            "x-go-type": "string"
+          }
+        },
+        {
+          "description": "The Secrets Manager instance UUID.",
+          "in": "path",
+          "name": "instanceId",
+          "required": true,
+          "schema": {
+            "format": "uuid",
+            "type": "string",
+            "x-go-type": "string"
+          }
+        }
+      ],
+      "post": {
+        "description": "Creates a new Secrets Manager acl within the project.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/aclCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/acl"
+                }
+              }
+            },
+            "description": "Acl was created successfully"
+          },
+          "400": {
+            "description": "Bad Request. Cidr not valid."
+          },
+          "401": {
+            "description": "Unauthorized. You may have provided no or wrong credentials."
+          },
+          "404": {
+            "description": "Not found. Instance not found."
+          },
+          "500": {
+            "description": "Internal server error. The application experienced some unexpected situation."
+          }
+        },
+        "tags": [
+          "acls"
+        ]
+      }
+    },
+    "/v1/projects/{projectId}/instances/{instanceId}/acls/{aclId}": {
+      "delete": {
+        "description": "Deletes the given acl.",
+        "responses": {
+          "204": {
+            "description": "Acl was deleted successfully"
+          },
+          "401": {
+            "description": "Unauthorized. You may have provided no or wrong credentials."
+          },
+          "404": {
+            "description": "Not found. Instance or acl not found."
+          },
+          "500": {
+            "description": "Internal server error. The application experienced some unexpected situation."
+          }
+        },
+        "tags": [
+          "acls"
+        ]
+      },
+      "get": {
+        "description": "Returns the details for the given acl.",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/acl"
+                }
+              }
+            },
+            "description": "The details for the acl have been successfully returned."
+          },
+          "401": {
+            "description": "Unauthorized. You may have provided no or wrong credentials."
+          },
+          "404": {
+            "description": "Not found. Instance or acl not found."
+          },
+          "500": {
+            "description": "Internal server error. The application experienced some unexpected situation."
+          }
+        },
+        "tags": [
+          "acls"
+        ]
+      },
+      "parameters": [
+        {
+          "description": "The STACKIT portal project UUID the Secrets Manager instance is part of.",
+          "in": "path",
+          "name": "projectId",
+          "required": true,
+          "schema": {
+            "format": "uuid",
+            "type": "string",
+            "x-go-type": "string"
+          }
+        },
+        {
+          "description": "The Secrets Manager instance UUID.",
+          "in": "path",
+          "name": "instanceId",
+          "required": true,
+          "schema": {
+            "format": "uuid",
+            "type": "string",
+            "x-go-type": "string"
+          }
+        },
+        {
+          "description": "The acl UUID of the Secrets Manager instance.",
+          "in": "path",
+          "name": "aclId",
+          "required": true,
+          "schema": {
+            "format": "uuid",
+            "type": "string",
+            "x-go-type": "string"
+          }
+        }
+      ],
+      "put": {
+        "description": "Updates the ip ranges for the acl.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/aclUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The ip range for the acl have been successfully updated."
+          },
+          "400": {
+            "description": "Bad Request. Cidr not valid."
+          },
+          "401": {
+            "description": "Unauthorized. You may have provided no or wrong credentials."
+          },
+          "404": {
+            "description": "Not found. Instance or acl not found."
+          },
+          "500": {
+            "description": "Internal server error. The application experienced some unexpected situation."
+          }
+        },
+        "tags": [
+          "acls"
+        ]
+      }
+    },
     "/v1/projects/{projectId}/instances/{instanceId}/users": {
       "get": {
         "description": "Returns the users for the given Secrets Manager instance.",
@@ -298,10 +580,16 @@
           "401": {
             "description": "Unauthorized. You may have provided no or wrong credentials."
           },
+          "404": {
+            "description": "Not found. Instance not found."
+          },
           "500": {
             "description": "Internal server error. The application experienced some unexpected situation."
           }
-        }
+        },
+        "tags": [
+          "users"
+        ]
       },
       "parameters": [
         {
@@ -350,13 +638,25 @@
             },
             "description": "The user has been created for the Secrets Manager instance."
           },
+          "400": {
+            "description": "Bad request. User description too long."
+          },
           "401": {
             "description": "Unauthorized. You may have provided no or wrong credentials."
+          },
+          "404": {
+            "description": "Not found. Instance not found."
+          },
+          "409": {
+            "description": "Conflict. User limit reached. Contact the support."
           },
           "500": {
             "description": "Internal server error. The application experienced some unexpected situation."
           }
-        }
+        },
+        "tags": [
+          "users"
+        ]
       }
     },
     "/v1/projects/{projectId}/instances/{instanceId}/users/{userId}": {
@@ -369,10 +669,16 @@
           "401": {
             "description": "Unauthorized. You may have provided no or wrong credentials."
           },
+          "404": {
+            "description": "Not found. Instance or user not found."
+          },
           "500": {
             "description": "Internal server error. The application experienced some unexpected situation."
           }
-        }
+        },
+        "tags": [
+          "users"
+        ]
       },
       "get": {
         "description": "Returns the details for the given user.",
@@ -390,10 +696,16 @@
           "401": {
             "description": "Unauthorized. You may have provided no or wrong credentials."
           },
+          "404": {
+            "description": "Not found. Instance or user not found."
+          },
           "500": {
             "description": "Internal server error. The application experienced some unexpected situation."
           }
-        }
+        },
+        "tags": [
+          "users"
+        ]
       },
       "parameters": [
         {
@@ -449,16 +761,22 @@
           "401": {
             "description": "Unauthorized. You may have provided no or wrong credentials."
           },
+          "404": {
+            "description": "Not found. Instance or user not found."
+          },
           "500": {
             "description": "Internal server error. The application experienced some unexpected situation."
           }
-        }
+        },
+        "tags": [
+          "users"
+        ]
       }
     }
   },
   "servers": [
     {
-      "description": "This API is a BETA API.\n\nThere are no guarantees for stability or compatibility ",
+      "description": "This API provides endpoints for managing the Secrets-Manager.\n",
       "url": "https://secrets-manager.api.eu01.stackit.cloud"
     }
   ]
