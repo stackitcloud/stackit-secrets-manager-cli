@@ -47,7 +47,7 @@ func createAcl() error {
 	if err != nil {
 		return fmt.Errorf("failed to create acl: %w", err)
 	}
-	if response.StatusCode != http.StatusOK {
+	if response.StatusCode != http.StatusCreated {
 		return fmt.Errorf("unexpected status code: %s", response.Status)
 	}
 
