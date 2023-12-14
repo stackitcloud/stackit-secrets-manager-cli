@@ -47,6 +47,11 @@ type AclUpdate struct {
 	Cidr string `json:"cidr"`
 }
 
+// AclUpdateList defines model for aclUpdateList.
+type AclUpdateList struct {
+	Cidrs *[]AclUpdate `json:"cidrs,omitempty"`
+}
+
 // Instance defines model for instance.
 type Instance struct {
 	// ApiUrl The API endpoint for connecting to the secrets engine.
@@ -130,6 +135,9 @@ type PostV1ProjectsProjectIdInstancesJSONRequestBody = InstanceCreate
 
 // PostV1ProjectsProjectIdInstancesInstanceIdAclsJSONRequestBody defines body for PostV1ProjectsProjectIdInstancesInstanceIdAcls for application/json ContentType.
 type PostV1ProjectsProjectIdInstancesInstanceIdAclsJSONRequestBody = AclCreate
+
+// PutV1ProjectsProjectIdInstancesInstanceIdAclsJSONRequestBody defines body for PutV1ProjectsProjectIdInstancesInstanceIdAcls for application/json ContentType.
+type PutV1ProjectsProjectIdInstancesInstanceIdAclsJSONRequestBody = AclUpdateList
 
 // PutV1ProjectsProjectIdInstancesInstanceIdAclsAclIdJSONRequestBody defines body for PutV1ProjectsProjectIdInstancesInstanceIdAclsAclId for application/json ContentType.
 type PutV1ProjectsProjectIdInstancesInstanceIdAclsAclIdJSONRequestBody = AclUpdate
@@ -234,6 +242,11 @@ type ClientInterface interface {
 	PostV1ProjectsProjectIdInstancesInstanceIdAclsWithBody(ctx context.Context, projectId string, instanceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	PostV1ProjectsProjectIdInstancesInstanceIdAcls(ctx context.Context, projectId string, instanceId string, body PostV1ProjectsProjectIdInstancesInstanceIdAclsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PutV1ProjectsProjectIdInstancesInstanceIdAcls request with any body
+	PutV1ProjectsProjectIdInstancesInstanceIdAclsWithBody(ctx context.Context, projectId string, instanceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PutV1ProjectsProjectIdInstancesInstanceIdAcls(ctx context.Context, projectId string, instanceId string, body PutV1ProjectsProjectIdInstancesInstanceIdAclsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// DeleteV1ProjectsProjectIdInstancesInstanceIdAclsAclId request
 	DeleteV1ProjectsProjectIdInstancesInstanceIdAclsAclId(ctx context.Context, projectId string, instanceId string, aclId string, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -352,6 +365,30 @@ func (c *Client) PostV1ProjectsProjectIdInstancesInstanceIdAclsWithBody(ctx cont
 
 func (c *Client) PostV1ProjectsProjectIdInstancesInstanceIdAcls(ctx context.Context, projectId string, instanceId string, body PostV1ProjectsProjectIdInstancesInstanceIdAclsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewPostV1ProjectsProjectIdInstancesInstanceIdAclsRequest(c.Server, projectId, instanceId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PutV1ProjectsProjectIdInstancesInstanceIdAclsWithBody(ctx context.Context, projectId string, instanceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPutV1ProjectsProjectIdInstancesInstanceIdAclsRequestWithBody(c.Server, projectId, instanceId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PutV1ProjectsProjectIdInstancesInstanceIdAcls(ctx context.Context, projectId string, instanceId string, body PutV1ProjectsProjectIdInstancesInstanceIdAclsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPutV1ProjectsProjectIdInstancesInstanceIdAclsRequest(c.Server, projectId, instanceId, body)
 	if err != nil {
 		return nil, err
 	}
@@ -743,6 +780,60 @@ func NewPostV1ProjectsProjectIdInstancesInstanceIdAclsRequestWithBody(server str
 	}
 
 	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewPutV1ProjectsProjectIdInstancesInstanceIdAclsRequest calls the generic PutV1ProjectsProjectIdInstancesInstanceIdAcls builder with application/json body
+func NewPutV1ProjectsProjectIdInstancesInstanceIdAclsRequest(server string, projectId string, instanceId string, body PutV1ProjectsProjectIdInstancesInstanceIdAclsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPutV1ProjectsProjectIdInstancesInstanceIdAclsRequestWithBody(server, projectId, instanceId, "application/json", bodyReader)
+}
+
+// NewPutV1ProjectsProjectIdInstancesInstanceIdAclsRequestWithBody generates requests for PutV1ProjectsProjectIdInstancesInstanceIdAcls with any type of body
+func NewPutV1ProjectsProjectIdInstancesInstanceIdAclsRequestWithBody(server string, projectId string, instanceId string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "projectId", runtime.ParamLocationPath, projectId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "instanceId", runtime.ParamLocationPath, instanceId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/projects/%s/instances/%s/acls", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PUT", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -1226,6 +1317,11 @@ type ClientWithResponsesInterface interface {
 
 	PostV1ProjectsProjectIdInstancesInstanceIdAclsWithResponse(ctx context.Context, projectId string, instanceId string, body PostV1ProjectsProjectIdInstancesInstanceIdAclsJSONRequestBody, reqEditors ...RequestEditorFn) (*PostV1ProjectsProjectIdInstancesInstanceIdAclsResponse, error)
 
+	// PutV1ProjectsProjectIdInstancesInstanceIdAcls request with any body
+	PutV1ProjectsProjectIdInstancesInstanceIdAclsWithBodyWithResponse(ctx context.Context, projectId string, instanceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PutV1ProjectsProjectIdInstancesInstanceIdAclsResponse, error)
+
+	PutV1ProjectsProjectIdInstancesInstanceIdAclsWithResponse(ctx context.Context, projectId string, instanceId string, body PutV1ProjectsProjectIdInstancesInstanceIdAclsJSONRequestBody, reqEditors ...RequestEditorFn) (*PutV1ProjectsProjectIdInstancesInstanceIdAclsResponse, error)
+
 	// DeleteV1ProjectsProjectIdInstancesInstanceIdAclsAclId request
 	DeleteV1ProjectsProjectIdInstancesInstanceIdAclsAclIdWithResponse(ctx context.Context, projectId string, instanceId string, aclId string, reqEditors ...RequestEditorFn) (*DeleteV1ProjectsProjectIdInstancesInstanceIdAclsAclIdResponse, error)
 
@@ -1382,6 +1478,27 @@ func (r PostV1ProjectsProjectIdInstancesInstanceIdAclsResponse) Status() string 
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r PostV1ProjectsProjectIdInstancesInstanceIdAclsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PutV1ProjectsProjectIdInstancesInstanceIdAclsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r PutV1ProjectsProjectIdInstancesInstanceIdAclsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PutV1ProjectsProjectIdInstancesInstanceIdAclsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -1630,6 +1747,23 @@ func (c *ClientWithResponses) PostV1ProjectsProjectIdInstancesInstanceIdAclsWith
 	return ParsePostV1ProjectsProjectIdInstancesInstanceIdAclsResponse(rsp)
 }
 
+// PutV1ProjectsProjectIdInstancesInstanceIdAclsWithBodyWithResponse request with arbitrary body returning *PutV1ProjectsProjectIdInstancesInstanceIdAclsResponse
+func (c *ClientWithResponses) PutV1ProjectsProjectIdInstancesInstanceIdAclsWithBodyWithResponse(ctx context.Context, projectId string, instanceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PutV1ProjectsProjectIdInstancesInstanceIdAclsResponse, error) {
+	rsp, err := c.PutV1ProjectsProjectIdInstancesInstanceIdAclsWithBody(ctx, projectId, instanceId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePutV1ProjectsProjectIdInstancesInstanceIdAclsResponse(rsp)
+}
+
+func (c *ClientWithResponses) PutV1ProjectsProjectIdInstancesInstanceIdAclsWithResponse(ctx context.Context, projectId string, instanceId string, body PutV1ProjectsProjectIdInstancesInstanceIdAclsJSONRequestBody, reqEditors ...RequestEditorFn) (*PutV1ProjectsProjectIdInstancesInstanceIdAclsResponse, error) {
+	rsp, err := c.PutV1ProjectsProjectIdInstancesInstanceIdAcls(ctx, projectId, instanceId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePutV1ProjectsProjectIdInstancesInstanceIdAclsResponse(rsp)
+}
+
 // DeleteV1ProjectsProjectIdInstancesInstanceIdAclsAclIdWithResponse request returning *DeleteV1ProjectsProjectIdInstancesInstanceIdAclsAclIdResponse
 func (c *ClientWithResponses) DeleteV1ProjectsProjectIdInstancesInstanceIdAclsAclIdWithResponse(ctx context.Context, projectId string, instanceId string, aclId string, reqEditors ...RequestEditorFn) (*DeleteV1ProjectsProjectIdInstancesInstanceIdAclsAclIdResponse, error) {
 	rsp, err := c.DeleteV1ProjectsProjectIdInstancesInstanceIdAclsAclId(ctx, projectId, instanceId, aclId, reqEditors...)
@@ -1872,6 +2006,22 @@ func ParsePostV1ProjectsProjectIdInstancesInstanceIdAclsResponse(rsp *http.Respo
 	return response, nil
 }
 
+// ParsePutV1ProjectsProjectIdInstancesInstanceIdAclsResponse parses an HTTP response from a PutV1ProjectsProjectIdInstancesInstanceIdAclsWithResponse call
+func ParsePutV1ProjectsProjectIdInstancesInstanceIdAclsResponse(rsp *http.Response) (*PutV1ProjectsProjectIdInstancesInstanceIdAclsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PutV1ProjectsProjectIdInstancesInstanceIdAclsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
 // ParseDeleteV1ProjectsProjectIdInstancesInstanceIdAclsAclIdResponse parses an HTTP response from a DeleteV1ProjectsProjectIdInstancesInstanceIdAclsAclIdWithResponse call
 func ParseDeleteV1ProjectsProjectIdInstancesInstanceIdAclsAclIdResponse(rsp *http.Response) (*DeleteV1ProjectsProjectIdInstancesInstanceIdAclsAclIdResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -2061,6 +2211,9 @@ type ServerInterface interface {
 	// (POST /v1/projects/{projectId}/instances/{instanceId}/acls)
 	PostV1ProjectsProjectIdInstancesInstanceIdAcls(ctx echo.Context, projectId string, instanceId string) error
 
+	// (PUT /v1/projects/{projectId}/instances/{instanceId}/acls)
+	PutV1ProjectsProjectIdInstancesInstanceIdAcls(ctx echo.Context, projectId string, instanceId string) error
+
 	// (DELETE /v1/projects/{projectId}/instances/{instanceId}/acls/{aclId})
 	DeleteV1ProjectsProjectIdInstancesInstanceIdAclsAclId(ctx echo.Context, projectId string, instanceId string, aclId string) error
 
@@ -2216,6 +2369,30 @@ func (w *ServerInterfaceWrapper) PostV1ProjectsProjectIdInstancesInstanceIdAcls(
 
 	// Invoke the callback with all the unmarshalled arguments
 	err = w.Handler.PostV1ProjectsProjectIdInstancesInstanceIdAcls(ctx, projectId, instanceId)
+	return err
+}
+
+// PutV1ProjectsProjectIdInstancesInstanceIdAcls converts echo context to params.
+func (w *ServerInterfaceWrapper) PutV1ProjectsProjectIdInstancesInstanceIdAcls(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "projectId" -------------
+	var projectId string
+
+	err = runtime.BindStyledParameterWithLocation("simple", false, "projectId", runtime.ParamLocationPath, ctx.Param("projectId"), &projectId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter projectId: %s", err))
+	}
+
+	// ------------- Path parameter "instanceId" -------------
+	var instanceId string
+
+	err = runtime.BindStyledParameterWithLocation("simple", false, "instanceId", runtime.ParamLocationPath, ctx.Param("instanceId"), &instanceId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter instanceId: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshalled arguments
+	err = w.Handler.PutV1ProjectsProjectIdInstancesInstanceIdAcls(ctx, projectId, instanceId)
 	return err
 }
 
@@ -2493,6 +2670,7 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.GET(baseURL+"/v1/projects/:projectId/instances/:instanceId", wrapper.GetV1ProjectsProjectIdInstancesInstanceId)
 	router.GET(baseURL+"/v1/projects/:projectId/instances/:instanceId/acls", wrapper.GetV1ProjectsProjectIdInstancesInstanceIdAcls)
 	router.POST(baseURL+"/v1/projects/:projectId/instances/:instanceId/acls", wrapper.PostV1ProjectsProjectIdInstancesInstanceIdAcls)
+	router.PUT(baseURL+"/v1/projects/:projectId/instances/:instanceId/acls", wrapper.PutV1ProjectsProjectIdInstancesInstanceIdAcls)
 	router.DELETE(baseURL+"/v1/projects/:projectId/instances/:instanceId/acls/:aclId", wrapper.DeleteV1ProjectsProjectIdInstancesInstanceIdAclsAclId)
 	router.GET(baseURL+"/v1/projects/:projectId/instances/:instanceId/acls/:aclId", wrapper.GetV1ProjectsProjectIdInstancesInstanceIdAclsAclId)
 	router.PUT(baseURL+"/v1/projects/:projectId/instances/:instanceId/acls/:aclId", wrapper.PutV1ProjectsProjectIdInstancesInstanceIdAclsAclId)
@@ -2507,38 +2685,39 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"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",
-	"AA==",
+	"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",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file
