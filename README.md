@@ -54,6 +54,11 @@ To get a list of all ACLs run:
 $ stackit-secrets-manager get acls --instance-id 0069066b-b7d2-4e04-bda8-0f3f02efb920
 ```
 
+To replace a list of acls:
+```shell
+$ stackit-secrets-manager update acls --instance-id 0069066b-b7d2-4e04-bda8-0f3f02efb920 --acls="127.0.0.2/32,127.0.0.1/32,127.0.0.3/32"
+```
+
 To create a user with write access for that instance:
 
 ```shell
