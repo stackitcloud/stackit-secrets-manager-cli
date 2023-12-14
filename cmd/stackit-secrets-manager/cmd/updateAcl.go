@@ -29,7 +29,7 @@ var updateAclCmd = &cobra.Command{
 func init() {
 	updateCmd.AddCommand(updateAclCmd)
 
-	updateAclCmd.PersistentFlags().StringVar(&updateAclInstanceId, "instance-id", "", "The UUID of the to update the acl for.")
+	updateAclCmd.PersistentFlags().StringVar(&updateAclInstanceId, "instance-id", "", "The UUID of the instance to update the acl for.")
 	_ = updateAclCmd.MarkPersistentFlagRequired("instance-id")
 	updateAclCmd.PersistentFlags().StringVar(&updateAclAclId, "acl-id", "", "The UUID of the acl to update the cidr from.")
 	_ = updateAclCmd.MarkPersistentFlagRequired("acl-id")
