@@ -11,15 +11,15 @@ import (
 
 var (
 	updateAclsInstanceId string
-	updateAclsCidrString []string
+	updateAclsCidrString *[]string
 )
 
 var updateAclsCmd = &cobra.Command{
-	Use:   "acl",
+	Use:   "acls",
 	Short: "Replaces an acl list with another acl list.",
 	Long:  `Replaces an acl list with another acl list.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		if err := updateAcl(); err != nil {
+		if err := replaceAclList(); err != nil {
 			fmt.Printf("ERROR: %v\n", err)
 		}
 	},
@@ -28,6 +28,9 @@ var updateAclsCmd = &cobra.Command{
 func init() {
 	updateCmd.AddCommand(updateAclsCmd)
 	updateAclsCmd.PersistentFlags().StringVar(&updateAclsInstanceId, "instance-id", "", "The UUID of the instance to update the acls.")
+	_ = updateAclsCmd.MarkPersistentFlagRequired("instance-id")
+	updateAclsCidrString = updateAclsCmd.PersistentFlags().StringSlice("acls", make([]string, 0), "The acls that are replacing the present acls.")
+	_ = updateAclsCmd.MarkPersistentFlagRequired("acls")
 }
 
 func replaceAclList() error {
@@ -36,7 +39,7 @@ func replaceAclList() error {
 		return err
 	}
 	var updateAclsCidr []api.AclUpdate
-	for _, cidr := range updateAclsCidrString {
+	for _, cidr := range *updateAclsCidrString {
 		updateAclsCidr = append(updateAclsCidr, api.AclUpdate{
 			Cidr: cidr,
 		})
