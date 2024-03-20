@@ -85,9 +85,7 @@ $ vault kv put 0069066b-b7d2-4e04-bda8-0f3f02efb920/foo bar=baz
 $ vault kv get 0069066b-b7d2-4e04-bda8-0f3f02efb920/foo
 ```
 
-The web UI for the secrets engine can be opened in any web browser with the API url of the instance as target
-location (i.e. "https://prod.sm.eu01.stackit.cloud"). Choose the "Username" login method and enter the username
-and password as given by the CLI command to log in.
+If you like to prefer to use a web UI, select your Secrets Manager instance from the STACKIT portal. By selecting the Secrets tab, you can manage your secrets and contained key-value-pairs.
 
 To delete a user for that instance:
 
