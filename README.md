@@ -1,4 +1,13 @@
-# STACKIT Secrets-Manager CLI
+# :no_entry: [DEPRECATED] :no_entry:
+
+A new tool was released which has all the functionality of the secrets manager. </br>
+This repository will not be maintained anymore.
+
+:arrow_right: Please use the [STACKIT-CLI](https://github.com/stackitcloud/stackit-cli) instead
+
+---
+
+## STACKIT Secrets-Manager CLI
 
 This project provides the command line interface to the STACKIT Secrets-Manager.
 
